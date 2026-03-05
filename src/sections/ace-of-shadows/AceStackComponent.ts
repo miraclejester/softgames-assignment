@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Component } from '../core/Component';
+import { Component } from '../../core/Component';
 
 export class AceStackComponent extends Component {
     private _verticalOffset: number = 2;
@@ -16,6 +16,10 @@ export class AceStackComponent extends Component {
 
     public get topCardY(): number {
         return this._floorY - ((this._numCards - 1) * this._verticalOffset);
+    }
+
+    public get nextTopCardY(): number {
+        return this.topCardY - this._verticalOffset*2;
     }
 
     public get topCard(): PIXI.Sprite {

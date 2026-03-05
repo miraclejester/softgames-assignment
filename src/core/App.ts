@@ -1,7 +1,12 @@
+import gsap from 'gsap';
 import * as PIXI from 'pixi.js';
+import { PixiPlugin } from 'gsap/PixiPlugin';
 import { GameObject } from './GameObject';
 import { AssetLoader } from './assets/AssetLoader';
-import { AceOfShadowsComponent } from '../ace-of-shadows/AceOfShadowsComponent';
+import { AceOfShadowsComponent } from '../sections/ace-of-shadows/AceOfShadowsComponent';
+import type { MagicWordsAvatarSpec, MagicWordsConfigSchema } from '../sections/magic-words/MagicWordsTypes';
+import { MagicWordsComponent } from '../sections/magic-words/MagicWordsComponent';
+
 
 /**
  * Manager class for the PIXI application
@@ -66,7 +71,10 @@ export class App {
                 initialBundles: ['cards']
             })
         ]);
+        this.initializePlugins();
 
+        // Temp Ace of Shadows
+        /*
         const aos: GameObject = new GameObject({
             label: "Ace of Shadows"
         });
@@ -74,6 +82,17 @@ export class App {
         aos.addComponent(new AceOfShadowsComponent())
 
         this._root.addChild(aos);
+        */
+
+        const data: MagicWordsConfigSchema = await this._assets.loadCustomJSON('https://private-624120-softgamesassignment.apiary-mock.com/v2/magicwords');
+
+        await Promise.all(data.avatars.map((avatar: MagicWordsAvatarSpec) => this._assets.loadImageFromUrl(avatar.url, `avatar-${avatar.name}`)));
+        
+        const mw: GameObject = new GameObject({
+            label: "Magic Words"
+        });
+        mw.addComponent(new MagicWordsComponent(data));
+        this._root.addChild(mw);
 
         this._innerApp.ticker.add((ticker: PIXI.Ticker) => {
             this._root.update(ticker.deltaMS);
@@ -99,6 +118,15 @@ export class App {
         document.body.appendChild(this._innerApp.canvas);
         this.resize();
         window.addEventListener('resize', () => this.resize());
+    }
+
+    /**
+     * Initialize pixi plugins
+     */
+    private initializePlugins(): void {
+        // Gsap
+        gsap.registerPlugin(PixiPlugin);
+        PixiPlugin.registerPIXI(PIXI);
     }
 
     /**

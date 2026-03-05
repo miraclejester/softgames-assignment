@@ -18,7 +18,7 @@ export class GameObject extends PIXI.Container {
      * List of child game objects. Since this extends PIXI.Container, it can also have non-GameObject children,
      * so we need to keep track of which ones are GameObjects for lifecycle management.
      */
-    private _objChildren: GameObject[];
+    private _objChildren: GameObject[] = [];
 
     /**
      * Is true if the game object has been initialized (ready has been called)

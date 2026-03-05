@@ -1,5 +1,7 @@
-import { Component } from '../core/Component';
-import { GameObject } from '../core/GameObject';
+import * as PIXI from 'pixi.js';
+import gsap from 'gsap';
+import { Component } from '../../core/Component';
+import { GameObject } from '../../core/GameObject';
 import { AceStackComponent } from './AceStackComponent';
 
 export class AceOfShadowsComponent extends Component {
@@ -17,8 +19,27 @@ export class AceOfShadowsComponent extends Component {
         this._time += delta;
         if (this._time > 1000) {
             this._time = 0;
-            this._stack2.addCard(this._stack1.removeTopCard());
+            this.moveCard(this._stack1, this._stack2);
         }
+    }
+
+    private moveCard(from: AceStackComponent, to: AceStackComponent): void {
+        const card: PIXI.Sprite | null = from.removeTopCard();
+        if (card === null) {
+            return;
+        }
+        card.x = from.gameObject.x;
+        card.y = from.gameObject.y + from.topCardY;
+        this.gameObject.addChild(card);
+        gsap.to(card, { 
+            x: to.gameObject.x, y: to.nextTopCardY + to.gameObject.y, 
+            duration: 2, ease: "power4.out",
+            onComplete: () => {
+            this.gameObject.removeChild(card);
+            card.x = 0;
+            card.y = to.topCardY;
+            to.addCard(card);
+        } });
     }
 
     private createStack(label: string, posX: number, posY: number, cards: number = 144): AceStackComponent {

@@ -16,4 +16,25 @@ export class AssetLoader {
     private async loadBundle(bundleKey: string): Promise<void> {
         await PIXI.Assets.loadBundle(bundleKey);
     }
+
+    public async loadImageFromUrl(url: string, alias: string): Promise<void> {
+        await PIXI.Assets.load({
+            alias,
+            src: url,
+            parser: 'texture'
+        });
+    }
+
+    public async loadCustomJSON<T>(path: string): Promise<T> {
+        try {
+            const response: Response = await fetch(path);
+            if (!response.ok) {
+                throw new Error(`Failed to load JSON at path: ${path}`);
+            }
+            return await (response.json()) as T
+        } catch (error) {
+            console.error(`Error loading JSON from ${path}:`, error);
+            throw error;
+        }
+    }
 }
