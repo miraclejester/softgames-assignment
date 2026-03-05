@@ -17,6 +17,10 @@ export class AssetLoader {
         await PIXI.Assets.loadBundle(bundleKey);
     }
 
+    public get<T>(key: string): T {
+        return PIXI.Assets.get<T>(key);
+    }
+
     public async loadImageFromUrl(url: string, alias: string): Promise<void> {
         await PIXI.Assets.load({
             alias,

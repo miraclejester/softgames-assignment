@@ -6,6 +6,14 @@ import { AssetLoader } from './assets/AssetLoader';
 import { AceOfShadowsComponent } from '../sections/ace-of-shadows/AceOfShadowsComponent';
 import type { MagicWordsAvatarSpec, MagicWordsConfigSchema } from '../sections/magic-words/MagicWordsTypes';
 import { MagicWordsComponent } from '../sections/magic-words/MagicWordsComponent';
+import { PhoenixParticleSystemComponent } from './components/particles/PhoenixParticleSystemComponent';
+import { PhoenixParticleAlphaModifier } from './components/particles/modifiers/PhoenixParticleAlphaModifier';
+import { PhoenixParticleRotationModifier } from './components/particles/modifiers/PhoenixParticleRotationModifier';
+import { PhoenixParticleSpeedModifier } from './components/particles/modifiers/PhoenixParticleSpeedModifier';
+import { PhoenixParticleLifeModifier } from './components/particles/modifiers/PhoenixParticleLifeModifier';
+import { PhoenixParticleScaleModifier } from './components/particles/modifiers/PhoenixParticleScaleModifier';
+import { PhoenixParticleColorModifier } from './components/particles/modifiers/PhoenixParticleColorModifier';
+import { PhoenixParticleStartPosModifier } from './components/particles/modifiers/PhoenixParticleStartPosModifier';
 
 
 /**
@@ -68,7 +76,7 @@ export class App {
             this.initializeScreen(),
             this._assets.initialize({
                 manifestPath: '/manifest.json',
-                initialBundles: ['cards']
+                initialBundles: ['cards', "particles"]
             })
         ]);
         this.initializePlugins();
@@ -84,6 +92,8 @@ export class App {
         this._root.addChild(aos);
         */
 
+        // Temp Magic Words
+        /*
         const data: MagicWordsConfigSchema = await this._assets.loadCustomJSON('https://private-624120-softgamesassignment.apiary-mock.com/v2/magicwords');
 
         await Promise.all(data.avatars.map((avatar: MagicWordsAvatarSpec) => this._assets.loadImageFromUrl(avatar.url, `avatar-${avatar.name}`)));
@@ -93,7 +103,31 @@ export class App {
         });
         mw.addComponent(new MagicWordsComponent(data));
         this._root.addChild(mw);
+        */
 
+        const phoenix: GameObject = new GameObject({
+            label: "Phoenix Flame"
+        });
+        phoenix.addComponent(new PhoenixParticleSystemComponent({
+            maxParticles: 10,
+            spritesheet: this._assets.get<PIXI.Spritesheet>('particles'),
+            frames: [
+                'feather',
+                'pFire',
+                'pFire2'
+            ],
+            modifiers: [
+                new PhoenixParticleStartPosModifier(-40, 40, -20, 20),
+                new PhoenixParticleLifeModifier(100, 200),
+                new PhoenixParticleRotationModifier(220, 260),
+                new PhoenixParticleSpeedModifier(300, 50),
+                new PhoenixParticleScaleModifier(2, 4),
+                new PhoenixParticleColorModifier(0xff0000, 0xfff200),
+                new PhoenixParticleAlphaModifier(1, 0)
+            ]
+        }));
+        phoenix.position.set(this.screenBounds.width / 2, this.screenBounds.height / 2);
+        this._root.addChild(phoenix);
         this._innerApp.ticker.add((ticker: PIXI.Ticker) => {
             this._root.update(ticker.deltaMS);
         });

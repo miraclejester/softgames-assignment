@@ -8,6 +8,15 @@
                     "src": "/images/card_back.png"
                 }
             ]
+        },
+        {
+            "name": "particles",
+            "assets": [
+                {
+                    "alias": "particles",
+                    "src": "/images/particles/particles.json"
+                }
+            ]
         }
     ]
 }
