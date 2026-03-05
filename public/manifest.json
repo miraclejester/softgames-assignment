@@ -1,0 +1,13 @@
+{
+    "bundles": [
+        {
+            "name": "cards",
+            "assets": [
+                {
+                    "alias": "card_back",
+                    "src": "/images/card_back.png"
+                }
+            ]
+        }
+    ]
+}
