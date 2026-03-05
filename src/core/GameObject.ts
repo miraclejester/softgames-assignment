@@ -21,6 +21,14 @@ export class GameObject extends PIXI.Container {
     private _objChildren: GameObject[];
 
     /**
+     * Is true if the game object has been initialized (ready has been called)
+     */
+    private _isReady: boolean = false;
+    public get isReady(): boolean {
+        return this._isReady;
+    }
+
+    /**
      * Called when the game object is added to the stage or as a child of another game object.
      * Initializes the list of child game objects and attached components
      */
@@ -28,6 +36,7 @@ export class GameObject extends PIXI.Container {
         this.refreshObjChildren();
         this._objChildren.forEach((child: GameObject) => child.ready());
         this._compDict.forEach((component: Component) => component.ready());
+        this._isReady = true;
     }
 
     /**
@@ -71,7 +80,9 @@ export class GameObject extends PIXI.Container {
     public addComponent<T extends Component>(component: T): void {
         this._compDict.set(component.constructor as Constructor<T>, component);
         component.registerGameObject(this);
-        component.ready();
+        if (this._isReady) {
+            component.ready();
+        }
     }
 
     /**

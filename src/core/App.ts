@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { GameObject } from './GameObject';
 import { AssetLoader } from './assets/AssetLoader';
+import { AceOfShadowsComponent } from '../ace-of-shadows/AceOfShadowsComponent';
 
 /**
  * Manager class for the PIXI application
@@ -66,11 +67,16 @@ export class App {
             })
         ]);
 
-        const sprite: PIXI.Sprite = PIXI.Sprite.from('card_back');
-        this._root.addChild(sprite);
+        const aos: GameObject = new GameObject({
+            label: "Ace of Shadows"
+        });
+
+        aos.addComponent(new AceOfShadowsComponent())
+
+        this._root.addChild(aos);
 
         this._innerApp.ticker.add((ticker: PIXI.Ticker) => {
-            this._root.update(ticker.deltaTime);
+            this._root.update(ticker.deltaMS);
         });
     }
 
