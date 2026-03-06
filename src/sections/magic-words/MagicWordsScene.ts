@@ -3,27 +3,43 @@ import { UIUtils } from '../../core/components/ui/UIUtils';
 import { GameObject } from '../../core/GameObject';
 import { Scene } from '../../core/scenes/Scene';
 import { MagicWordsComponent } from './MagicWordsComponent';
-import type { MagicWordsAvatarSpec, MagicWordsConfigSchema, MagicWordsEmojiSpec } from './MagicWordsTypes';
+import type { MagicWordsAvatarSpec, MagicWordsConfigSchema } from './MagicWordsTypes';
 
+/**
+ * Scene for the Magic Words section
+ */
 export class MagicWordsScene extends Scene {
+    /**
+     * @inheritdoc
+     */
     protected static override readonly ROOT_NAME: string = "Magic Words Scene";
 
+    /**
+     * Set up the config object by merging external and internal data,
+     * then initialize the MagicWordsComponent
+     */
     public override async start(): Promise<void> {
         const data: MagicWordsConfigSchema = await App.instance.assets
-            .loadCustomJSON('https://private-624120-softgamesassignment.apiary-mock.com/v2/magicwords');
-
-        await Promise.all([
-            ...data.avatars.map(
-                (avatar: MagicWordsAvatarSpec) => App.instance.assets.loadImageFromUrl(avatar.url, `avatar-${avatar.name}`)),
-            ...data.emojies.map(
-                (emoji: MagicWordsEmojiSpec) => App.instance.assets.loadImageFromUrl(emoji.url, `emoji-${emoji.name}`))
-            ]
-        );
+            .get<MagicWordsConfigSchema>('magic-words-json');
         
         const mw: GameObject = new GameObject({
             label: "Magic Words"
         });
-        mw.addComponent(new MagicWordsComponent(data));
+
+        const localAvatars: MagicWordsAvatarSpec[] = [
+            {
+                name: 'Neighbour',
+                url: 'avatar-Neighbour',
+                position: 'left'
+            }
+        ]
+        mw.addComponent(new MagicWordsComponent({
+            ...data, 
+            avatars: [
+                ...data.avatars,
+                ...localAvatars
+            ]
+        }));
         this._root.addChild(mw);
 
         this._root.addChild(UIUtils.createBackToMenuButton());

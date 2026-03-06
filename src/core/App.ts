@@ -9,12 +9,20 @@ import { AceOfShadowsScene } from '../sections/ace-of-shadows/AceOfShadowsScene'
 import { MagicWordsScene } from '../sections/magic-words/MagicWordsScene';
 import { PhoenixFlameScene } from '../sections/phoenix-flame/PhoenixFlameScene';
 import { TextComponent } from './components/ui/TextComponent';
+import { LoaderScene } from '../sections/loader/LoaderScene';
+import { AudioManager } from './audio/AudioManager';
 
 
 /**
  * Manager class for the PIXI application
  */
 export class App {
+    /**
+     * Screen base resolution
+     */
+    private static readonly SCREEN_WIDTH: number = 1280;
+    private static readonly SCREEN_HEIGHT: number = 720;
+
     /**
      * Static instance of the App
      */
@@ -27,21 +35,32 @@ export class App {
     }
 
     /**
+     * Internal PIXI app managed by this object
+     */
+    private _innerApp: PIXI.Application;
+
+    /**
      * App screen bounds
      */
     public get screenBounds(): PIXI.Rectangle {
         return this._innerApp.screen.getBounds();
     }
 
+    /**
+     * Root object. Lifecycle methods all come from here
+     */
     private _root: GameObject;
     public get root(): GameObject {
         return this._root;
     }
 
     /**
-     * Internal PIXI app managed by this object
+     * Overlay for objects that are independent of the scenes
      */
-    private _innerApp: PIXI.Application;
+    private _overlay: GameObject;
+    public get overlay(): GameObject {
+        return this._overlay;
+    }
 
     /**
      * Asset loader
@@ -60,6 +79,14 @@ export class App {
     }
 
     /**
+     * Audio manager
+     */
+    private _audioManager: AudioManager;
+    public get audio(): AudioManager {
+        return this._audioManager;
+    }
+
+    /**
      * Initialize variables
      */
     private constructor() {
@@ -67,7 +94,11 @@ export class App {
         this._root = new GameObject({
             label: "root"
         });
+        this._overlay = new GameObject({
+            label: "overlay"
+        });
         this._innerApp.stage.addChild(this._root);
+        this._innerApp.stage.addChild(this._overlay);
         this._assets = new AssetLoader();
         this._sceneManager = new SceneManager({
             entries: [
@@ -86,22 +117,21 @@ export class App {
                 {
                     key: 'phoenix-flame',
                     scene: PhoenixFlameScene
+                },
+                {
+                    key: 'loader',
+                    scene: LoaderScene
                 }
             ]
         });
+        this._audioManager = new AudioManager();
     }
 
     /**
      * Initialize the app and put the canvas in the window
      */
     public async init(): Promise<void> {
-        await Promise.all([
-            this.initializeScreen(),
-            this._assets.initialize({
-                manifestPath: '/manifest.json',
-                initialBundles: ['cards', 'particles', 'ui']
-            })
-        ]);
+        await this.initializeScreen();
         this.initializePlugins();
 
         const fpsObj: GameObject = new GameObject({
@@ -111,15 +141,15 @@ export class App {
         fpsObj.addComponent(fpsTextComp);
         fpsObj.x = 100;
         fpsObj.y = 60;
-
-        this._root.addChild(fpsObj);
+        this._overlay.addChild(fpsObj);
 
         this._innerApp.ticker.add((ticker: PIXI.Ticker) => {
             this._root.update(ticker.deltaMS);
             fpsTextComp.setText(`FPS: ${ticker.FPS.toFixed(2)}`);
         });
 
-        await this._sceneManager.switchTo('main-menu');
+        this._audioManager.initialize();
+        await this._sceneManager.switchTo('loader');
     }
 
     /**
@@ -127,38 +157,43 @@ export class App {
      */
     private async initializeScreen(): Promise<void> {
         await this._innerApp.init({
-            width: 1280,
-            height: 720,
-            backgroundColor: 0x000000,
-            resizeTo: window
+            width: App.SCREEN_WIDTH,
+            height: App.SCREEN_HEIGHT,
+            backgroundColor: 0x000000
         });
-        this._innerApp.canvas.style.display = 'block';
         this._innerApp.canvas.style.position = 'absolute';
-        this._innerApp.canvas.style.top = '0';
-        this._innerApp.canvas.style.left = '0';
         document.body.style.margin = '0';
         document.body.style.padding = '0';
         document.body.appendChild(this._innerApp.canvas);
         this.resize();
         window.addEventListener('resize', () => this.resize());
+        
+        window.addEventListener('pointerdown', () => {
+            if (!document.fullscreenElement) {
+                this._innerApp.canvas.requestFullscreen();
+            }
+        });
     }
 
     /**
      * Initialize pixi plugins
      */
     private initializePlugins(): void {
-        // Gsap
         gsap.registerPlugin(PixiPlugin);
         PixiPlugin.registerPIXI(PIXI);
     }
 
     /**
-     * Resize the canvas and scale the root to fit the screen
+     * Resize the canvas to fit the screen, keeping the initial ratio
      */
     private resize(): void {
-        this._innerApp.canvas.width = window.innerWidth;
-        this._innerApp.canvas.height = window.innerHeight;
-        const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
-        this._innerApp.stage.scale.set(scale);
+        const scale: number = Math.min(window.innerWidth / App.SCREEN_WIDTH, window.innerHeight / App.SCREEN_HEIGHT);
+        const width: number = App.SCREEN_WIDTH * scale;
+        const height: number = App.SCREEN_HEIGHT * scale;
+
+        this._innerApp.canvas.style.width = `${width}px`;
+        this._innerApp.canvas.style.height = `${height}px`;
+        this._innerApp.canvas.style.left = `${(window.innerWidth - width) / 2}px`;
+        this._innerApp.canvas.style.right = `${(window.innerHeight - height) / 2}px`;
     }
 }

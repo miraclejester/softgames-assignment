@@ -1,3 +1,6 @@
+/**
+ * Config object for buttons
+ */
 export type ButtonConfig = {
     atlasKey?: string;
     defaultKey: string;
@@ -6,6 +9,9 @@ export type ButtonConfig = {
     text: string;
 }
 
+/**
+ * Config object for button instantiation
+ */
 export type ButtonCreationConfig = {
     buttonName?: string;
     buttonText: string;

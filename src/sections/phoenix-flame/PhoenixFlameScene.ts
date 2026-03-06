@@ -12,15 +12,34 @@ import { PhoenixParticleSpeedModifier } from '../../core/components/particles/mo
 import { PhoenixParticleStartPosModifier } from '../../core/components/particles/modifiers/PhoenixParticleStartPosModifier';
 import { UIUtils } from '../../core/components/ui/UIUtils';
 
+/**
+ * Scene for the Phoenix Flame Section
+ */
 export class PhoenixFlameScene extends Scene {
+    /**
+     * @inheritdoc
+     */
     protected static override readonly ROOT_NAME: string = "Phoenix Flame Scene";
 
+    /**
+     * Set up the particle system and the dignified holding hands
+     */
     public override async start(): Promise<void> {
+        // Dignified hands
+        const hand: PIXI.Sprite = PIXI.Sprite.from('hand-fire');
+        hand.x = 360;
+        hand.y = 280;
+        this._root.addChild(hand);
+
+        // Particle system. Uses 3 different particle images to simulate
+        // A kind of fire that reminds of a Phoenix
         const phoenix: GameObject = new GameObject({
             label: "Phoenix Flame"
         });
+
+        // Limit is set to 9 to still have the dignified hand and comply with the 10-sprite limit
         phoenix.addComponent(new PhoenixParticleSystemComponent({
-            maxParticles: 10,
+            maxParticles: 9,
             spritesheet: App.instance.assets.get<PIXI.Spritesheet>('particles'),
             frames: [
                 'feather',
@@ -37,7 +56,7 @@ export class PhoenixFlameScene extends Scene {
                 new PhoenixParticleAlphaModifier(1, 0)
             ]
         }));
-        phoenix.position.set(650, 400);
+        phoenix.position.set(630, 480);
         this._root.addChild(phoenix);
 
         this._root.addChild(UIUtils.createBackToMenuButton());

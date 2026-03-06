@@ -6,6 +6,10 @@ import type { AssetLoaderConfig } from './AssetLoaderConfig';
  */
 export class AssetLoader {
 
+    /**
+     * Initialize the aset loader with the manifest files and local bundles
+     * @param config 
+     */
     public async initialize(config: AssetLoaderConfig): Promise<void> {
         await PIXI.Assets.init({
             manifest: config.manifestPath
@@ -13,49 +17,38 @@ export class AssetLoader {
         await Promise.all(config.initialBundles.map((bundlePath: string) => this.loadBundle(bundlePath)));
     }
 
-    private async loadBundle(bundleKey: string): Promise<void> {
-        await PIXI.Assets.loadBundle(bundleKey);
+    /**
+     * Load all internal assets (images, sounds, urls we have locally) from the manifest
+     * @param bundleKeys - Keys for the bundles containing data
+     * @param progressCallback - Callback for showing loading progress
+     */
+    public async loadInternal(bundleKeys: string[], progressCallback: (progress: number) => void): Promise<void> {
+        await PIXI.Assets.loadBundle(bundleKeys, progressCallback);
     }
 
+    /**
+     * Load external assets not present in the manifest
+     * @param data - Data to load
+     * @param progressCallback - Callback for showing loading progress
+     */
+    public async loadExternal(data: PIXI.UnresolvedAsset[], progressCallback: (progress: number) => void): Promise<void> {
+        await PIXI.Assets.load(data, progressCallback);
+    }
+
+    /**
+     * Get an asset from the cache
+     * @param key - Alias of the asset
+     * @returns An object of type T if it exists in the cache with the given alias
+     */
     public get<T>(key: string): T {
         return PIXI.Assets.get<T>(key);
     }
 
-    public async loadImageFromUrl(url: string, alias: string): Promise<void> {
-        await PIXI.Assets.load({
-            alias,
-            src: url,
-            parser: 'texture'
-        });
-    }
-
-    public getTextureSource(alias: string): string {
-        let texture: PIXI.Texture = PIXI.Texture.from(alias);
-        if (!texture) texture = PIXI.Texture.from('red_x');
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const resource: ImageBitmap = texture.source.resource;
-        if (!resource) return '';
-        const canvas = document.createElement('canvas');
-        canvas.width = resource.width;
-        canvas.height = resource.height;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-            ctx.drawImage(resource, 0, 0);
-            return canvas.toDataURL();
-        }
-        return '';
-    }
-
-    public async loadCustomJSON<T>(path: string): Promise<T> {
-        try {
-            const response: Response = await fetch(path);
-            if (!response.ok) {
-                throw new Error(`Failed to load JSON at path: ${path}`);
-            }
-            return await (response.json()) as T
-        } catch (error) {
-            console.error(`Error loading JSON from ${path}:`, error);
-            throw error;
-        }
+    /**
+     * Load one local bundle
+     * @param bundleKey - Key for the bundle to load
+     */
+    private async loadBundle(bundleKey: string): Promise<void> {
+        await PIXI.Assets.loadBundle(bundleKey);
     }
 }
