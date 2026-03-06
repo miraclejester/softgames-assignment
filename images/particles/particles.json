@@ -1,0 +1,36 @@
+{"frames": {
+
+"feather":
+{
+	"frame": {"x":0,"y":0,"w":22,"h":22},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":22,"h":22},
+	"sourceSize": {"w":22,"h":22}
+},
+"pFire":
+{
+	"frame": {"x":22,"y":0,"w":44,"h":44},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":44},
+	"sourceSize": {"w":44,"h":44}
+},
+"pFire2":
+{
+	"frame": {"x":66,"y":0,"w":44,"h":44},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":44},
+	"sourceSize": {"w":44,"h":44}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "particles.png",
+	"format": "RGBA8888",
+	"size": {"w":110,"h":44},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:c49bd27878b711beeb5b47ffa07db349:83576fc89649cdcb258b0426b229cc3f:767f0aa26e08023d62afa20c0c952bea$"
+}
+}
