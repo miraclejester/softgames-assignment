@@ -1,3 +1,4 @@
+import { UIUtils } from '../../core/components/ui/UIUtils';
 import { GameObject } from '../../core/GameObject';
 import { Scene } from '../../core/scenes/Scene';
 import { AceOfShadowsComponent } from './AceOfShadowsComponent';
@@ -13,5 +14,7 @@ export class AceOfShadowsScene extends Scene {
         aos.addComponent(new AceOfShadowsComponent())
 
         this._root.addChild(aos);
+
+        this._root.addChild(UIUtils.createBackToMenuButton());
     }
 }

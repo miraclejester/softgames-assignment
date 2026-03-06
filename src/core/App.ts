@@ -8,6 +8,7 @@ import { MainMenuScene } from '../sections/main-menu/MainMenuScene';
 import { AceOfShadowsScene } from '../sections/ace-of-shadows/AceOfShadowsScene';
 import { MagicWordsScene } from '../sections/magic-words/MagicWordsScene';
 import { PhoenixFlameScene } from '../sections/phoenix-flame/PhoenixFlameScene';
+import { TextComponent } from './components/TextComponent';
 
 
 /**
@@ -103,8 +104,19 @@ export class App {
         ]);
         this.initializePlugins();
 
+        const fpsObj: GameObject = new GameObject({
+            label: 'FPS'
+        });
+        const fpsTextComp: TextComponent = new TextComponent('FPS: ');
+        fpsObj.addComponent(fpsTextComp);
+        fpsObj.x = 100;
+        fpsObj.y = 60;
+
+        this._root.addChild(fpsObj);
+
         this._innerApp.ticker.add((ticker: PIXI.Ticker) => {
             this._root.update(ticker.deltaMS);
+            fpsTextComp.setText(`FPS: ${ticker.FPS.toFixed(2)}`);
         });
 
         await this._sceneManager.switchTo('main-menu');
@@ -146,6 +158,7 @@ export class App {
     private resize(): void {
         this._innerApp.canvas.width = window.innerWidth;
         this._innerApp.canvas.height = window.innerHeight;
-        const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);        this._innerApp.stage.scale.set(scale);
+        const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+        this._innerApp.stage.scale.set(scale);
     }
 }

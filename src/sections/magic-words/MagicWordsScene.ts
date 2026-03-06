@@ -1,4 +1,5 @@
 import { App } from '../../core/App';
+import { UIUtils } from '../../core/components/ui/UIUtils';
 import { GameObject } from '../../core/GameObject';
 import { Scene } from '../../core/scenes/Scene';
 import { MagicWordsComponent } from './MagicWordsComponent';
@@ -20,5 +21,7 @@ export class MagicWordsScene extends Scene {
         });
         mw.addComponent(new MagicWordsComponent(data));
         this._root.addChild(mw);
+
+        this._root.addChild(UIUtils.createBackToMenuButton());
     }
 }

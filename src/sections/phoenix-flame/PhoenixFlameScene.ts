@@ -10,6 +10,7 @@ import { PhoenixParticleRotationModifier } from '../../core/components/particles
 import { PhoenixParticleScaleModifier } from '../../core/components/particles/modifiers/PhoenixParticleScaleModifier';
 import { PhoenixParticleSpeedModifier } from '../../core/components/particles/modifiers/PhoenixParticleSpeedModifier';
 import { PhoenixParticleStartPosModifier } from '../../core/components/particles/modifiers/PhoenixParticleStartPosModifier';
+import { UIUtils } from '../../core/components/ui/UIUtils';
 
 export class PhoenixFlameScene extends Scene {
     protected static override readonly ROOT_NAME: string = "Phoenix Flame Scene";
@@ -38,5 +39,7 @@ export class PhoenixFlameScene extends Scene {
         }));
         phoenix.position.set(650, 400);
         this._root.addChild(phoenix);
+
+        this._root.addChild(UIUtils.createBackToMenuButton());
     }
 }

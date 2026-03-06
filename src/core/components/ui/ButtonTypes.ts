@@ -5,3 +5,11 @@ export type ButtonConfig = {
     pressedKey: string;
     text: string;
 }
+
+export type ButtonCreationConfig = {
+    buttonName?: string;
+    buttonText: string;
+    x: number;
+    y: number;
+    callback?: () => void;
+}
