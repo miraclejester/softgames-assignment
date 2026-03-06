@@ -1,10 +1,8 @@
 import * as PIXI from 'pixi.js';
 import type { Component } from './Component';
+import type { Constructor } from './TypeUtils';
 
-/**
- * Generic type used for component constructors
- */
-type Constructor<T> = new (...args: unknown[]) => T;
+
 
 /**
  * Base game object class that can have components attached to it and manages their lifecycle.

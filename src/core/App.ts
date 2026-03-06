@@ -3,17 +3,11 @@ import * as PIXI from 'pixi.js';
 import { PixiPlugin } from 'gsap/PixiPlugin';
 import { GameObject } from './GameObject';
 import { AssetLoader } from './assets/AssetLoader';
-import { AceOfShadowsComponent } from '../sections/ace-of-shadows/AceOfShadowsComponent';
-import type { MagicWordsAvatarSpec, MagicWordsConfigSchema } from '../sections/magic-words/MagicWordsTypes';
-import { MagicWordsComponent } from '../sections/magic-words/MagicWordsComponent';
-import { PhoenixParticleSystemComponent } from './components/particles/PhoenixParticleSystemComponent';
-import { PhoenixParticleAlphaModifier } from './components/particles/modifiers/PhoenixParticleAlphaModifier';
-import { PhoenixParticleRotationModifier } from './components/particles/modifiers/PhoenixParticleRotationModifier';
-import { PhoenixParticleSpeedModifier } from './components/particles/modifiers/PhoenixParticleSpeedModifier';
-import { PhoenixParticleLifeModifier } from './components/particles/modifiers/PhoenixParticleLifeModifier';
-import { PhoenixParticleScaleModifier } from './components/particles/modifiers/PhoenixParticleScaleModifier';
-import { PhoenixParticleColorModifier } from './components/particles/modifiers/PhoenixParticleColorModifier';
-import { PhoenixParticleStartPosModifier } from './components/particles/modifiers/PhoenixParticleStartPosModifier';
+import { SceneManager } from './scenes/SceneManager';
+import { MainMenuScene } from '../sections/main-menu/MainMenuScene';
+import { AceOfShadowsScene } from '../sections/ace-of-shadows/AceOfShadowsScene';
+import { MagicWordsScene } from '../sections/magic-words/MagicWordsScene';
+import { PhoenixFlameScene } from '../sections/phoenix-flame/PhoenixFlameScene';
 
 
 /**
@@ -57,6 +51,14 @@ export class App {
     }
 
     /**
+     * Scene manager
+     */
+    private _sceneManager: SceneManager;
+    public get scenes(): SceneManager {
+        return this._sceneManager;
+    }
+
+    /**
      * Initialize variables
      */
     private constructor() {
@@ -66,6 +68,26 @@ export class App {
         });
         this._innerApp.stage.addChild(this._root);
         this._assets = new AssetLoader();
+        this._sceneManager = new SceneManager({
+            entries: [
+                {
+                    key: 'main-menu',
+                    scene: MainMenuScene
+                },
+                {
+                    key: 'ace-of-shadows',
+                    scene: AceOfShadowsScene
+                },
+                {
+                    key: 'magic-words',
+                    scene: MagicWordsScene
+                },
+                {
+                    key: 'phoenix-flame',
+                    scene: PhoenixFlameScene
+                }
+            ]
+        });
     }
 
     /**
@@ -76,61 +98,16 @@ export class App {
             this.initializeScreen(),
             this._assets.initialize({
                 manifestPath: '/manifest.json',
-                initialBundles: ['cards', "particles"]
+                initialBundles: ['cards', 'particles', 'ui']
             })
         ]);
         this.initializePlugins();
 
-        // Temp Ace of Shadows
-        /*
-        const aos: GameObject = new GameObject({
-            label: "Ace of Shadows"
-        });
-
-        aos.addComponent(new AceOfShadowsComponent())
-
-        this._root.addChild(aos);
-        */
-
-        // Temp Magic Words
-        /*
-        const data: MagicWordsConfigSchema = await this._assets.loadCustomJSON('https://private-624120-softgamesassignment.apiary-mock.com/v2/magicwords');
-
-        await Promise.all(data.avatars.map((avatar: MagicWordsAvatarSpec) => this._assets.loadImageFromUrl(avatar.url, `avatar-${avatar.name}`)));
-        
-        const mw: GameObject = new GameObject({
-            label: "Magic Words"
-        });
-        mw.addComponent(new MagicWordsComponent(data));
-        this._root.addChild(mw);
-        */
-
-        const phoenix: GameObject = new GameObject({
-            label: "Phoenix Flame"
-        });
-        phoenix.addComponent(new PhoenixParticleSystemComponent({
-            maxParticles: 10,
-            spritesheet: this._assets.get<PIXI.Spritesheet>('particles'),
-            frames: [
-                'feather',
-                'pFire',
-                'pFire2'
-            ],
-            modifiers: [
-                new PhoenixParticleStartPosModifier(-40, 40, -20, 20),
-                new PhoenixParticleLifeModifier(100, 200),
-                new PhoenixParticleRotationModifier(220, 260),
-                new PhoenixParticleSpeedModifier(300, 50),
-                new PhoenixParticleScaleModifier(2, 4),
-                new PhoenixParticleColorModifier(0xff0000, 0xfff200),
-                new PhoenixParticleAlphaModifier(1, 0)
-            ]
-        }));
-        phoenix.position.set(this.screenBounds.width / 2, this.screenBounds.height / 2);
-        this._root.addChild(phoenix);
         this._innerApp.ticker.add((ticker: PIXI.Ticker) => {
             this._root.update(ticker.deltaMS);
         });
+
+        await this._sceneManager.switchTo('main-menu');
     }
 
     /**

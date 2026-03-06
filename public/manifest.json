@@ -17,6 +17,15 @@
                     "src": "/images/particles/particles.json"
                 }
             ]
+        },
+        {
+            "name": "ui",
+            "assets": [
+                {
+                    "alias": "ui",
+                    "src": "images/ui/ui.json"
+                }
+            ]
         }
     ]
 }
