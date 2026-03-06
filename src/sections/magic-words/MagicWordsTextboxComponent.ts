@@ -4,12 +4,30 @@ import { TextComponent } from '../../core/components/ui/TextComponent';
 import * as PIXI from 'pixi.js';
 import type { MagicWordsParsedText, MagicWordsWrappedLine, MagicWordsWrappedText, MagicWordsWrappedWord } from './MagicWordsTypes';
 
+/**
+ * Textbox for the Magic Words section
+ */
 export class MagicWordsTextboxComponent extends Component {
+    /**
+     * Objects that are currently in the textbox. Can be text or emojis
+     */
     private _childObjects: GameObject[] = [];
+    /**
+     * Textbox sprite
+     */
     private _textbox: PIXI.NineSliceSprite;
+    /**
+     * Separation between lines
+     */
     private readonly _lineHeight: number = 32;
+    /**
+     * Horizontal padding for text
+     */
     private readonly _textPadding: number = 10;
 
+    /**
+     * Create the textbox and add it to the gameObject
+     */
     public override ready(): void {
         this._textbox = new PIXI.NineSliceSprite({
             texture: PIXI.Texture.from('textbox'),
@@ -25,11 +43,19 @@ export class MagicWordsTextboxComponent extends Component {
         this.gameObject.addChild(this._textbox);
     }
 
+    /**
+     * Set the text for this textbox
+     * Triggers the creation of the chained texts and emojies
+     * @param text - Text to use
+     */
     public setText(text: string): void {
         this.clearChildObjects();
         this.createTextObjects(text);
     }
 
+    /**
+     * Remove all content from the textbox
+     */
     private clearChildObjects(): void {
         for (const childObj of this._childObjects) {
             this.gameObject.removeChild(childObj);
@@ -37,7 +63,12 @@ export class MagicWordsTextboxComponent extends Component {
         this._childObjects = [];
     }
 
+    /**
+     * Create the text for the textbox, taking into account emojies and word wrapping
+     * @param text - Text to use
+     */
     private createTextObjects(text: string): void {
+        // With these 3 calls, transform the text into a MagicWordsWrappedText instance
         const parts: MagicWordsParsedText[] = this.parseText(text);
         const words: MagicWordsWrappedWord[] = this.measureWords(parts);
         const wrappedText: MagicWordsWrappedText = this.wrapWordsToLines(words);
@@ -46,6 +77,7 @@ export class MagicWordsTextboxComponent extends Component {
         wrappedText.lines.forEach((line: MagicWordsWrappedLine) => {
             let currentX: number = 0;
             line.words.forEach((word: MagicWordsWrappedWord) => {
+                // Process each word and initialize their text or sprite components. Widths and positions have already been calculated
                 const part = word.part;
                 if (part.type === 'text') {
                     const textObj: GameObject = new GameObject({
@@ -86,11 +118,17 @@ export class MagicWordsTextboxComponent extends Component {
         });
     }
 
+    /**
+     * Measure the width of individual words in this text and get a list of words with their widths
+     * @param parts - List of text elements, processed to determine their type
+     * @returns List of the words with their final width added
+     */
     private measureWords(parts: MagicWordsParsedText[]): MagicWordsWrappedWord[] {
         const words: MagicWordsWrappedWord[] = [];
         
         parts.forEach((part: MagicWordsParsedText) => {
             if (part.type === 'text') {
+                // Split by space. Process space and non-spaces differently
                 const textWords: string[] = part.content.split(' ');
                 textWords.forEach((word: string, i: number) => {
                     if (word.length > 0) {
@@ -104,6 +142,7 @@ export class MagicWordsTextboxComponent extends Component {
                             width: width
                         });
                     }
+                    // Add a space after the last word
                     if (i < textWords.length - 1) {
                         const spaceText: PIXI.Text = new PIXI.Text({
                             text: ' ',
@@ -116,6 +155,7 @@ export class MagicWordsTextboxComponent extends Component {
                     }
                 });
             } else if (part.type === 'emoji') {
+                // For emojies, get the width from the asset
                 const sprite: PIXI.Sprite = PIXI.Sprite.from(part.alias!);
                 sprite.height = 24;
                 sprite.scale.x = sprite.scale.y;
@@ -124,8 +164,8 @@ export class MagicWordsTextboxComponent extends Component {
                     part: part,
                     width: width
                 });
-                
 
+                // Add a space after the emoji
                 const spaceText: PIXI.Text = new PIXI.Text({
                     text: ' ',
                     style: { fontSize: 24, fill: 0xffffff, fontFamily: 'Arial', align: 'left' }
@@ -140,6 +180,11 @@ export class MagicWordsTextboxComponent extends Component {
         return words;
     }
 
+    /**
+     * Combine processed words into lines that don't exceed the width limit
+     * @param words - Words to process
+     * @returns List of processed lines
+     */
     private wrapWordsToLines(words: MagicWordsWrappedWord[]): MagicWordsWrappedText {
         const finalText: MagicWordsWrappedText = {
             lines: []
@@ -150,10 +195,13 @@ export class MagicWordsTextboxComponent extends Component {
         let currentLineWidth: number = 0;
         
         words.forEach((word: MagicWordsWrappedWord) => {
+            // If adding the word does not exceed the width limit, add it
             if (currentLineWidth + word.width <= this._textbox.width - this._textPadding * 2) {
                 currentLine.words.push(word);
                 currentLineWidth += word.width;
             } else {
+            // If the current word exceeds the width limit, remove trailing space and finalize the current line
+            // Start a new line with the current word
                 if (currentLine.words.length > 0) {
                     this.removeTrailingSpace(currentLine);
                 }
@@ -164,6 +212,7 @@ export class MagicWordsTextboxComponent extends Component {
             }
         });
 
+        // Remove trailing space from the last word
         if (currentLine.words.length > 0) {
             this.removeTrailingSpace(currentLine);
             finalText.lines.push(currentLine);
@@ -172,6 +221,10 @@ export class MagicWordsTextboxComponent extends Component {
         return finalText;
     }
 
+    /**
+     * Remove the last word from a line if it is whitespace
+     * @param currentLine - Line to processs
+     */
     private removeTrailingSpace(currentLine: MagicWordsWrappedLine): void {
         if (currentLine.words[currentLine.words.length - 1]!.part.type === 'text' && 
             currentLine.words[currentLine.words.length - 1]!.part.content === ' ') {
@@ -179,6 +232,11 @@ export class MagicWordsTextboxComponent extends Component {
         }
     }
 
+    /**
+     * Use regex to determine the type of each word in a text, and also add processing data
+     * @param text - Text to process
+     * @returns Parsed text with width and content for texts and sprites and names for emojies
+     */
     private parseText(text: string): MagicWordsParsedText[] {
         const parts: MagicWordsParsedText[] = [];
         const regex: RegExp = /\{(.*?)\}/g;
@@ -187,12 +245,15 @@ export class MagicWordsTextboxComponent extends Component {
         
         while ((match = regex.exec(text)) !== null) {
             if (match.index > lastIndex) {
+                // Grab all the text from before the emoji was seen
                 parts.push({
                     type: 'text',
                     content: text.substring(lastIndex, match.index)
                 });
             }
             
+            // Get the emoji data. Match[1] is emoji name
+            // Match[2] is the entire word with brackets ex. ({emojiname})
             const emojiName: string = match[1]!;
             const alias: string = `emoji-${emojiName}`;
             parts.push({
@@ -203,7 +264,8 @@ export class MagicWordsTextboxComponent extends Component {
             
             lastIndex = regex.lastIndex;
         }
-        
+
+        // Grab all the text after the last emoji
         if (lastIndex < text.length) {
             parts.push({
                 type: 'text',

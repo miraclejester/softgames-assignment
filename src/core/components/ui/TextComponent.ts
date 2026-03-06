@@ -1,6 +1,9 @@
 import * as PIXI from 'pixi.js';
 import { Component } from '../../Component';
 
+/**
+ * Small interface copying what PIXI expects for texts
+ */
 export interface TextStyle {
     fontSize?: number;
     fill?: number | string;
@@ -13,7 +16,13 @@ export interface TextStyle {
  * The component manages a text object that is added as a child of the GameObject.
  */
 export class TextComponent extends Component {
+    /**
+     * Text instance to manage
+     */
     private _text: PIXI.Text | null = null;
+    /**
+     * Default style
+     */
     private _defaultStyle: TextStyle = {
         fontSize: 24,
         fill: 0xffffff,
@@ -23,7 +32,6 @@ export class TextComponent extends Component {
 
     /**
      * Creates a new TextComponent with the specified text
-     * 
      * @param initialText - The text to display
      * @param style - Optional text style configuration
      */
@@ -38,6 +46,9 @@ export class TextComponent extends Component {
         this._text.anchor.set(0.5);
     }
 
+    /**
+     * Adds the text to the hierarchy
+     */
     public override ready(): void {
         if (this._text && !this.gameObject.children.includes(this._text)) {
             this.gameObject.addChild(this._text);

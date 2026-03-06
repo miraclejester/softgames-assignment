@@ -5,9 +5,19 @@ import { Scene } from '../../core/scenes/Scene';
 import { MagicWordsComponent } from './MagicWordsComponent';
 import type { MagicWordsAvatarSpec, MagicWordsConfigSchema } from './MagicWordsTypes';
 
+/**
+ * Scene for the Magic Words section
+ */
 export class MagicWordsScene extends Scene {
+    /**
+     * @inheritdoc
+     */
     protected static override readonly ROOT_NAME: string = "Magic Words Scene";
 
+    /**
+     * Set up the config object by merging external and internal data,
+     * then initialize the MagicWordsComponent
+     */
     public override async start(): Promise<void> {
         const data: MagicWordsConfigSchema = await App.instance.assets
             .get<MagicWordsConfigSchema>('magic-words-json');

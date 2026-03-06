@@ -18,6 +18,12 @@ import { AudioManager } from './audio/AudioManager';
  */
 export class App {
     /**
+     * Screen base resolution
+     */
+    private static readonly SCREEN_WIDTH: number = 1280;
+    private static readonly SCREEN_HEIGHT: number = 720;
+
+    /**
      * Static instance of the App
      */
     private static _instance: App;
@@ -40,11 +46,17 @@ export class App {
         return this._innerApp.screen.getBounds();
     }
 
+    /**
+     * Root object. Lifecycle methods all come from here
+     */
     private _root: GameObject;
     public get root(): GameObject {
         return this._root;
     }
 
+    /**
+     * Overlay for objects that are independent of the scenes
+     */
     private _overlay: GameObject;
     public get overlay(): GameObject {
         return this._overlay;
@@ -66,6 +78,9 @@ export class App {
         return this._sceneManager;
     }
 
+    /**
+     * Audio manager
+     */
     private _audioManager: AudioManager;
     public get audio(): AudioManager {
         return this._audioManager;
@@ -126,7 +141,6 @@ export class App {
         fpsObj.addComponent(fpsTextComp);
         fpsObj.x = 100;
         fpsObj.y = 60;
-
         this._overlay.addChild(fpsObj);
 
         this._innerApp.ticker.add((ticker: PIXI.Ticker) => {
@@ -143,16 +157,11 @@ export class App {
      */
     private async initializeScreen(): Promise<void> {
         await this._innerApp.init({
-            width: 1280,
-            height: 720,
-            backgroundColor: 0x000000,
-            resolution: window.devicePixelRatio,
-            autoDensity: true
+            width: App.SCREEN_WIDTH,
+            height: App.SCREEN_HEIGHT,
+            backgroundColor: 0x000000
         });
-        this._innerApp.canvas.style.display = 'block';
         this._innerApp.canvas.style.position = 'absolute';
-        this._innerApp.canvas.style.top = '0';
-        this._innerApp.canvas.style.left = '0';
         document.body.style.margin = '0';
         document.body.style.padding = '0';
         document.body.appendChild(this._innerApp.canvas);
@@ -170,18 +179,17 @@ export class App {
      * Initialize pixi plugins
      */
     private initializePlugins(): void {
-        // Gsap
         gsap.registerPlugin(PixiPlugin);
         PixiPlugin.registerPIXI(PIXI);
     }
 
     /**
-     * Resize the canvas and scale the root to fit the screen
+     * Resize the canvas to fit the screen, keeping the initial ratio
      */
     private resize(): void {
-        const scale: number = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
-        const width: number = 1280 * scale;
-        const height: number = 720 * scale;
+        const scale: number = Math.min(window.innerWidth / App.SCREEN_WIDTH, window.innerHeight / App.SCREEN_HEIGHT);
+        const width: number = App.SCREEN_WIDTH * scale;
+        const height: number = App.SCREEN_HEIGHT * scale;
 
         this._innerApp.canvas.style.width = `${width}px`;
         this._innerApp.canvas.style.height = `${height}px`;

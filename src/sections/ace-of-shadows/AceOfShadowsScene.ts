@@ -5,9 +5,18 @@ import { GameObject } from '../../core/GameObject';
 import { Scene } from '../../core/scenes/Scene';
 import { AceOfShadowsComponent } from './AceOfShadowsComponent';
 
+/**
+ * Scene for the Ace of Shadows section
+ */
 export class AceOfShadowsScene extends Scene {
+    /**
+     * @inheritdoc
+     */
     protected static override readonly ROOT_NAME: string = 'Ace Of Shadows Scene';
 
+    /**
+     * Set up the Ace of Shadows root and configuration objects
+     */
     public override async start(): Promise<void> {
         const aos: GameObject = new GameObject({
             label: "Ace of Shadows"

@@ -7,9 +7,18 @@ import { Scene } from '../../core/scenes/Scene';
 import { PointUtils } from '../../core/math/PointUtils';
 import gsap from 'gsap';
 
+/**
+ * Scene for the main menu
+ */
 export class MainMenuScene extends Scene {
+    /**
+     * @inheritdoc
+     */
     protected static override readonly ROOT_NAME: string = "MainMenuScene";
 
+    /**
+     * Configure the title, the buttons that lead into sections, and the fun hands
+     */
     public override async start(): Promise<void> {
         const titleComp: TextComponent = new TextComponent("Jose Montenegro - Softgames Test!", {
             fontSize: 40
@@ -57,6 +66,13 @@ export class MainMenuScene extends Scene {
         App.instance.audio.playBgm('check-this-out');
     }
 
+    /**
+     * Create a fun hand
+     * @param x - Position x
+     * @param y - Position y
+     * @param rotation - Rotation of the hand in radians
+     * @returns The hand's sprite
+     */
     private createHand(x: number, y: number, rotation: number): PIXI.Sprite {
         const hand: PIXI.Sprite = PIXI.Sprite.from('hand-point');
         hand.x = x;
@@ -66,6 +82,11 @@ export class MainMenuScene extends Scene {
         return hand;
     }
 
+    /**
+     * Start the hand's bobbing animation. Loops around
+     * @param hand - Hand to animated
+     * @param xOffset - Horizontal offset to animate to
+     */
     private startBobHand(hand: PIXI.Sprite, xOffset: number): void {
         var tx: number = hand.x + xOffset;
         gsap.to(hand, {
@@ -74,6 +95,9 @@ export class MainMenuScene extends Scene {
         });
     }
 
+    /**
+     * Move to a section
+     */
     private moveToScene(key: string): void {
         App.instance.scenes.switchTo(key);
     }

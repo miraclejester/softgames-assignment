@@ -3,7 +3,15 @@ import { GameObject } from '../../GameObject';
 import { ButtonComponent } from './ButtonComponent';
 import type { ButtonCreationConfig } from './ButtonTypes';
 
+/**
+ * Utility UI methods
+ */
 export class UIUtils {
+    /**
+     * Creates a button with ui assets and callback
+     * @param config - Configuration object
+     * @returns GameObject with the button component added
+     */
     public static createButtonObj(config: ButtonCreationConfig): GameObject {
         const buttonObj: GameObject = new GameObject({
             label: config.buttonName ?? 'Button'
@@ -23,6 +31,10 @@ export class UIUtils {
         return buttonObj;
     }
 
+    /**
+     * Creates a button that opens the main menu scene
+     * @returns 
+     */
     public static createBackToMenuButton(): GameObject {
         return this.createButtonObj({
             buttonText: "Back to Menu",

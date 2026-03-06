@@ -2,8 +2,6 @@ import * as PIXI from 'pixi.js';
 import type { Component } from './Component';
 import type { Constructor } from './TypeUtils';
 
-
-
 /**
  * Base game object class that can have components attached to it and manages their lifecycle.
  */
@@ -39,7 +37,7 @@ export class GameObject extends PIXI.Container {
 
     /**
      * Called every frame. Updates attached children and components
-     * @param delta - Time since last update
+     * @param delta - Time since last update in milliseconds
      */
     public update(delta: number): void {
         if (this.destroyed) {

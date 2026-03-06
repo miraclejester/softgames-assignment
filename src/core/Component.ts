@@ -16,11 +16,13 @@ export class Component {
      * Called when the component is attached to the game object
      */
     public ready(): void { /* Override me */};
+
     /**
      * Called when the game object is updated.
-     * @param _delta Time since last update
+     * @param _delta Time since last update in milliseconds
      */
     public update(_delta: number): void { /* Override me */};
+
     /**
      * Called when the game object is destroyed
      */
