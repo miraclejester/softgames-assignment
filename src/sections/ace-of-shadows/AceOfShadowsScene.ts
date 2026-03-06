@@ -26,25 +26,25 @@ export class AceOfShadowsScene extends Scene {
                 initialCards: 144,
                 atlasKey,
                 backingFrame,
-                x: 650,
+                x: 600,
                 y: 100
             },
             emptyStacks: [
                 {
                     initialCards: 0,
-                    atlasKey, backingFrame, x: 300, y: 50
+                    atlasKey, backingFrame, x: 290, y: -10
                 },
                 {
                     initialCards: 0,
-                    atlasKey, backingFrame, x: 1000, y: 50
+                    atlasKey, backingFrame, x: 910, y: -40
                 },
                 {
                     initialCards: 0,
-                    atlasKey, backingFrame, x: 400, y: 150
+                    atlasKey, backingFrame, x: 380, y: 150
                 },
                 {
                     initialCards: 0,
-                    atlasKey, backingFrame, x: 900, y: 150
+                    atlasKey, backingFrame, x: 820, y: 150
                 },
             ]
         }))

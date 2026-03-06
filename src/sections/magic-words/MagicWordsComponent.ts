@@ -13,6 +13,7 @@ export class MagicWordsComponent extends Component {
     private _textboxComp: MagicWordsTextboxComponent;
     private _avatarSpecMap: Map<string, MagicWordsAvatarSpec>;
     private _lineIndex: number = 0;
+    private _pointingHand: PIXI.Sprite; 
 
     private _time: number = 0;
 
@@ -22,6 +23,12 @@ export class MagicWordsComponent extends Component {
     }
 
     public override ready(): void {
+        this._pointingHand = PIXI.Sprite.from('hand-point');
+        this._pointingHand.visible = false;
+        this._pointingHand.x = 1050;
+        this._pointingHand.y = 100;
+        this.gameObject.addChild(this._pointingHand);
+
         this._avatarSpecMap = new Map<string, MagicWordsAvatarSpec>();
         this._config.avatars.forEach((avatarSpec: MagicWordsAvatarSpec) => {
             this._avatarSpecMap.set(avatarSpec.name, avatarSpec);
@@ -54,6 +61,7 @@ export class MagicWordsComponent extends Component {
 
     public playNextLine(): void {
         if (this._lineIndex >= this._config.dialogue.length) {
+            this._pointingHand.visible = true;
             return;
         }
         this.playLine(this._config.dialogue[this._lineIndex]!);

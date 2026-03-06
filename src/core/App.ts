@@ -108,7 +108,7 @@ export class App {
             this.initializeScreen(),
             this._assets.initialize({
                 manifestPath: '/manifest.json',
-                initialBundles: ['cards', 'particles', 'ui', 'localMagicWords']
+                initialBundles: ['cards', 'particles', 'ui', 'localMagicWords', 'hands']
             })
         ]);
         this.initializePlugins();
@@ -151,6 +151,12 @@ export class App {
         document.body.appendChild(this._innerApp.canvas);
         this.resize();
         window.addEventListener('resize', () => this.resize());
+        
+        window.addEventListener('pointerdown', () => {
+            if (!document.fullscreenElement) {
+                this._innerApp.canvas.requestFullscreen();
+            }
+        });
     }
 
     /**

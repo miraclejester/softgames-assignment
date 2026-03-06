@@ -16,11 +16,16 @@ export class PhoenixFlameScene extends Scene {
     protected static override readonly ROOT_NAME: string = "Phoenix Flame Scene";
 
     public override async start(): Promise<void> {
+        const hand: PIXI.Sprite = PIXI.Sprite.from('hand-fire');
+        hand.x = 360;
+        hand.y = 280;
+        this._root.addChild(hand);
+
         const phoenix: GameObject = new GameObject({
             label: "Phoenix Flame"
         });
         phoenix.addComponent(new PhoenixParticleSystemComponent({
-            maxParticles: 10,
+            maxParticles: 9,
             spritesheet: App.instance.assets.get<PIXI.Spritesheet>('particles'),
             frames: [
                 'feather',
@@ -37,7 +42,7 @@ export class PhoenixFlameScene extends Scene {
                 new PhoenixParticleAlphaModifier(1, 0)
             ]
         }));
-        phoenix.position.set(650, 400);
+        phoenix.position.set(630, 480);
         this._root.addChild(phoenix);
 
         this._root.addChild(UIUtils.createBackToMenuButton());

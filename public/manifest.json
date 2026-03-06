@@ -28,10 +28,6 @@
                 {
                     "alias": "ui",
                     "src": "images/ui/ui.json"
-                },
-                {
-                    "alias": "red_x",
-                    "src": "images/red_x.png"
                 }
             ]
         },
@@ -57,6 +53,23 @@
                 {
                     "alias": "textbox",
                     "src": "images/localMagicWords/textbox.png"
+                }
+            ]
+        },
+        {
+            "name": "hands",
+            "assets": [
+                {
+                    "alias": "hand-point",
+                    "src": "images/hands/hand_point.png"
+                },
+                {
+                    "alias": "hand-get",
+                    "src": "images/hands/hand_get.png"
+                },
+                {
+                    "alias": "hand-fire",
+                    "src": "images/hands/hand_fire.png"
                 }
             ]
         }
