@@ -72,6 +72,16 @@
                     "src": "images/hands/hand_fire.png"
                 }
             ]
+        },
+        {
+            "name": "magicWords",
+            "assets": [
+                {
+                    "alias": "magic-words-json",
+                    "src": "https://private-624120-softgamesassignment.apiary-mock.com/v2/magicwords",
+                    "parser": "json"
+                }
+            ]
         }
     ]
 }

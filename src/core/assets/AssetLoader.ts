@@ -17,6 +17,14 @@ export class AssetLoader {
         await PIXI.Assets.loadBundle(bundleKey);
     }
 
+    public async loadInternal(bundleKeys: string[], progressCallback: (progress: number) => void): Promise<void> {
+        await PIXI.Assets.loadBundle(bundleKeys, progressCallback);
+    }
+
+    public async loadExternal(data: PIXI.UnresolvedAsset[], progressCallback: (progress: number) => void): Promise<void> {
+        await PIXI.Assets.load(data, progressCallback);
+    }
+
     public get<T>(key: string): T {
         return PIXI.Assets.get<T>(key);
     }

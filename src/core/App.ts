@@ -9,6 +9,7 @@ import { AceOfShadowsScene } from '../sections/ace-of-shadows/AceOfShadowsScene'
 import { MagicWordsScene } from '../sections/magic-words/MagicWordsScene';
 import { PhoenixFlameScene } from '../sections/phoenix-flame/PhoenixFlameScene';
 import { TextComponent } from './components/ui/TextComponent';
+import { LoaderScene } from '../sections/loader/LoaderScene';
 
 
 /**
@@ -95,6 +96,10 @@ export class App {
                 {
                     key: 'phoenix-flame',
                     scene: PhoenixFlameScene
+                },
+                {
+                    key: 'loader',
+                    scene: LoaderScene
                 }
             ]
         });
@@ -104,13 +109,7 @@ export class App {
      * Initialize the app and put the canvas in the window
      */
     public async init(): Promise<void> {
-        await Promise.all([
-            this.initializeScreen(),
-            this._assets.initialize({
-                manifestPath: '/manifest.json',
-                initialBundles: ['cards', 'particles', 'ui', 'localMagicWords', 'hands']
-            })
-        ]);
+        await this.initializeScreen();
         this.initializePlugins();
 
         const fpsObj: GameObject = new GameObject({
@@ -128,7 +127,7 @@ export class App {
             fpsTextComp.setText(`FPS: ${ticker.FPS.toFixed(2)}`);
         });
 
-        await this._sceneManager.switchTo('main-menu');
+        await this._sceneManager.switchTo('loader');
     }
 
     /**
