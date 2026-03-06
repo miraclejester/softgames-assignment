@@ -53,6 +53,10 @@
                 {
                     "alias": "avatar-Neighbour",
                     "src": "images/localMagicWords/neighbour.png"
+                },
+                {
+                    "alias": "textbox",
+                    "src": "images/localMagicWords/textbox.png"
                 }
             ]
         }

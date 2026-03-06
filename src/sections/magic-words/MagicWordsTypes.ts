@@ -29,3 +29,16 @@ export type MagicWordsParsedText = {
     content: string;
     alias?: string;
 };
+
+export type MagicWordsWrappedWord = {
+    part: MagicWordsParsedText;
+    width: number;
+};
+
+export type MagicWordsWrappedLine = {
+    words: MagicWordsWrappedWord[]
+}
+
+export type MagicWordsWrappedText = {
+    lines: MagicWordsWrappedLine[];
+};
