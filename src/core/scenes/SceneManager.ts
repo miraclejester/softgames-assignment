@@ -24,6 +24,7 @@ export class SceneManager {
             this._currentScene.destroy();
             App.instance.root.removeChild(this._currentScene.root);
         }
+        App.instance.audio.stopAllSfx();
         this._currentScene = new (this._sceneMap.get(key)!);
         App.instance.root.addChild(this._currentScene.root);
         await this._currentScene.start();

@@ -35,7 +35,7 @@ export class LoaderScene extends Scene {
         this._root.addChild(this._loadingBar);
 
         await App.instance.assets.loadInternal([
-            'cards', 'particles', 'localMagicWords', 'hands', 'magicWords'
+            'cards', 'particles', 'localMagicWords', 'hands', 'magicWords', 'audio'
         ], this.onProgress.bind(this));
 
         this._loadingBar.progress = 0;

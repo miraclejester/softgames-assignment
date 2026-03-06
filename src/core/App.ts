@@ -10,6 +10,7 @@ import { MagicWordsScene } from '../sections/magic-words/MagicWordsScene';
 import { PhoenixFlameScene } from '../sections/phoenix-flame/PhoenixFlameScene';
 import { TextComponent } from './components/ui/TextComponent';
 import { LoaderScene } from '../sections/loader/LoaderScene';
+import { AudioManager } from './audio/AudioManager';
 
 
 /**
@@ -26,6 +27,11 @@ export class App {
         }
         return App._instance;
     }
+
+    /**
+     * Internal PIXI app managed by this object
+     */
+    private _innerApp: PIXI.Application;
 
     /**
      * App screen bounds
@@ -45,11 +51,6 @@ export class App {
     }
 
     /**
-     * Internal PIXI app managed by this object
-     */
-    private _innerApp: PIXI.Application;
-
-    /**
      * Asset loader
      */
     private _assets: AssetLoader;
@@ -63,6 +64,11 @@ export class App {
     private _sceneManager: SceneManager;
     public get scenes(): SceneManager {
         return this._sceneManager;
+    }
+
+    private _audioManager: AudioManager;
+    public get audio(): AudioManager {
+        return this._audioManager;
     }
 
     /**
@@ -103,6 +109,7 @@ export class App {
                 }
             ]
         });
+        this._audioManager = new AudioManager();
     }
 
     /**
@@ -127,6 +134,7 @@ export class App {
             fpsTextComp.setText(`FPS: ${ticker.FPS.toFixed(2)}`);
         });
 
+        this._audioManager.initialize();
         await this._sceneManager.switchTo('loader');
     }
 

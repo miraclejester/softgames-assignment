@@ -41,6 +41,8 @@ export class AceOfShadowsComponent extends Component {
         if (card === null) {
             return;
         }
+
+        App.instance.audio.playSfx('deck-deal');
         card.x = from.gameObject.x;
         card.y = from.gameObject.y + from.topCardY;
         this.gameObject.addChild(card);

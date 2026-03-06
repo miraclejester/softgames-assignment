@@ -82,6 +82,23 @@
                     "parser": "json"
                 }
             ]
+        },
+        {
+            "name": "audio",
+            "assets": [
+                {
+                    "alias": "deck-deal",
+                    "src": "audio/deck_deal.wav"
+                },
+                {
+                    "alias": "check-this-out",
+                    "src": "audio/check_this_out.wav"
+                },
+                {
+                    "alias": "blip",
+                    "src": "audio/blip.wav"
+                }
+            ]
         }
     ]
 }

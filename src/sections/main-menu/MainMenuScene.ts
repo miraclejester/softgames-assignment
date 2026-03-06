@@ -53,6 +53,8 @@ export class MainMenuScene extends Scene {
             this.createHand(1080, 250, PointUtils.degreesToRadians(-90)),
             20
         );
+
+        App.instance.audio.playBgm('check-this-out');
     }
 
     private createHand(x: number, y: number, rotation: number): PIXI.Sprite {

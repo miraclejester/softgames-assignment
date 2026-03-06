@@ -21,6 +21,9 @@ export class ButtonComponent extends Component {
             pressedView: this.getButtonTexture(this._config.pressedKey),
         });
         this._innerButton.anchor.set(0.5);
+        this._innerButton.onPress.connect(() => {
+            App.instance.audio.playSfx('blip', false);
+        });
     }
 
     public override ready(): void {
