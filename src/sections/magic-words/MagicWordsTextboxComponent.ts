@@ -26,10 +26,7 @@ export class MagicWordsTextboxComponent extends Component {
     }
 
     public setText(text: string): void {
-        // Clear previous child objects
         this.clearChildObjects();
-        
-        // Parse and create child objects
         this.createTextObjects(text);
     }
 
@@ -94,11 +91,9 @@ export class MagicWordsTextboxComponent extends Component {
         
         parts.forEach((part: MagicWordsParsedText) => {
             if (part.type === 'text') {
-                // Split text by spaces to create individual words
                 const textWords: string[] = part.content.split(' ');
                 textWords.forEach((word: string, i: number) => {
                     if (word.length > 0) {
-                        // Create a temporary text to measure width
                         const tempText: PIXI.Text = new PIXI.Text({
                             text: word,
                             style: { fontSize: 24, fill: 0xffffff, fontFamily: 'Arial', align: 'left' }
@@ -109,7 +104,6 @@ export class MagicWordsTextboxComponent extends Component {
                             width: width
                         });
                     }
-                    // Add space after each word except the last
                     if (i < textWords.length - 1) {
                         const spaceText: PIXI.Text = new PIXI.Text({
                             text: ' ',
@@ -130,7 +124,8 @@ export class MagicWordsTextboxComponent extends Component {
                     part: part,
                     width: width
                 });
-                // Add space after emoji
+                
+
                 const spaceText: PIXI.Text = new PIXI.Text({
                     text: ' ',
                     style: { fontSize: 24, fill: 0xffffff, fontFamily: 'Arial', align: 'left' }
@@ -159,7 +154,6 @@ export class MagicWordsTextboxComponent extends Component {
                 currentLine.words.push(word);
                 currentLineWidth += word.width;
             } else {
-                // Start a new line if current line is not empty
                 if (currentLine.words.length > 0) {
                     this.removeTrailingSpace(currentLine);
                 }
@@ -169,8 +163,7 @@ export class MagicWordsTextboxComponent extends Component {
                 currentLineWidth = word.width;
             }
         });
-        
-        // Add the last line
+
         if (currentLine.words.length > 0) {
             this.removeTrailingSpace(currentLine);
             finalText.lines.push(currentLine);
@@ -193,7 +186,6 @@ export class MagicWordsTextboxComponent extends Component {
         let match: RegExpExecArray | null;
         
         while ((match = regex.exec(text)) !== null) {
-            // Add text before the emoji
             if (match.index > lastIndex) {
                 parts.push({
                     type: 'text',
@@ -201,7 +193,6 @@ export class MagicWordsTextboxComponent extends Component {
                 });
             }
             
-            // Add the emoji
             const emojiName: string = match[1]!;
             const alias: string = `emoji-${emojiName}`;
             parts.push({
@@ -213,7 +204,6 @@ export class MagicWordsTextboxComponent extends Component {
             lastIndex = regex.lastIndex;
         }
         
-        // Add remaining text
         if (lastIndex < text.length) {
             parts.push({
                 type: 'text',
