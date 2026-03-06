@@ -8,7 +8,7 @@ import { MainMenuScene } from '../sections/main-menu/MainMenuScene';
 import { AceOfShadowsScene } from '../sections/ace-of-shadows/AceOfShadowsScene';
 import { MagicWordsScene } from '../sections/magic-words/MagicWordsScene';
 import { PhoenixFlameScene } from '../sections/phoenix-flame/PhoenixFlameScene';
-import { TextComponent } from './components/TextComponent';
+import { TextComponent } from './components/ui/TextComponent';
 
 
 /**

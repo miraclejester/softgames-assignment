@@ -29,6 +29,23 @@ export class AssetLoader {
         });
     }
 
+    public getTextureSource(alias: string): string {
+        let texture: PIXI.Texture = PIXI.Texture.from(alias);
+        if (!texture) texture = PIXI.Texture.from('red_x');
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const resource: ImageBitmap = texture.source.resource;
+        if (!resource) return '';
+        const canvas = document.createElement('canvas');
+        canvas.width = resource.width;
+        canvas.height = resource.height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+            ctx.drawImage(resource, 0, 0);
+            return canvas.toDataURL();
+        }
+        return '';
+    }
+
     public async loadCustomJSON<T>(path: string): Promise<T> {
         try {
             const response: Response = await fetch(path);

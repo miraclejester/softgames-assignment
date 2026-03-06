@@ -3,7 +3,7 @@ import { FancyButton } from '@pixi/ui';
 import { Component } from '../../Component';
 import type { ButtonConfig } from './ButtonTypes';
 import { App } from '../../App';
-import { TextComponent } from '../TextComponent';
+import { TextComponent } from './TextComponent';
 import { GameObject } from '../../GameObject';
 
 export class ButtonComponent extends Component {

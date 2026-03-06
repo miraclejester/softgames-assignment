@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Component } from '../Component';
+import { Component } from '../../Component';
 
 export interface TextStyle {
     fontSize?: number;
@@ -9,8 +9,6 @@ export interface TextStyle {
 }
 
 /**
- * TextComponent
- * 
  * Displays text on screen using PIXI.Text.
  * The component manages a text object that is added as a child of the GameObject.
  */
@@ -36,7 +34,7 @@ export class TextComponent extends Component {
         this._text = new PIXI.Text({
             text: initialText,
             style: mergedStyle
-        })
+        });
         this._text.anchor.set(0.5);
     }
 

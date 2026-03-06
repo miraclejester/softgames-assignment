@@ -1,5 +1,3 @@
-import * as PIXI from 'pixi.js';
-
 export type EMagicWordsAvatarPosition = 'left' | 'right';
 
 export type MagicWordsDialogueLine = {

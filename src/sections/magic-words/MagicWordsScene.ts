@@ -3,7 +3,7 @@ import { UIUtils } from '../../core/components/ui/UIUtils';
 import { GameObject } from '../../core/GameObject';
 import { Scene } from '../../core/scenes/Scene';
 import { MagicWordsComponent } from './MagicWordsComponent';
-import type { MagicWordsAvatarSpec, MagicWordsConfigSchema } from './MagicWordsTypes';
+import type { MagicWordsAvatarSpec, MagicWordsConfigSchema, MagicWordsEmojiSpec } from './MagicWordsTypes';
 
 export class MagicWordsScene extends Scene {
     protected static override readonly ROOT_NAME: string = "Magic Words Scene";
@@ -12,8 +12,12 @@ export class MagicWordsScene extends Scene {
         const data: MagicWordsConfigSchema = await App.instance.assets
             .loadCustomJSON('https://private-624120-softgamesassignment.apiary-mock.com/v2/magicwords');
 
-        await Promise.all(data.avatars.map(
-            (avatar: MagicWordsAvatarSpec) => App.instance.assets.loadImageFromUrl(avatar.url, `avatar-${avatar.name}`))
+        await Promise.all([
+            ...data.avatars.map(
+                (avatar: MagicWordsAvatarSpec) => App.instance.assets.loadImageFromUrl(avatar.url, `avatar-${avatar.name}`)),
+            ...data.emojies.map(
+                (emoji: MagicWordsEmojiSpec) => App.instance.assets.loadImageFromUrl(emoji.url, `emoji-${emoji.name}`))
+            ]
         );
         
         const mw: GameObject = new GameObject({

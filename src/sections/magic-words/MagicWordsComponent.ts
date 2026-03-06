@@ -39,7 +39,7 @@ export class MagicWordsComponent extends Component {
         const textbox: GameObject = new GameObject({
             label: 'Textbox'
         });
-        textbox.position.set(700, 600);
+        textbox.position.set(300, 600);
         this._textboxComp = new MagicWordsTextboxComponent();
         textbox.addComponent(this._textboxComp);
         this.gameObject.addChild(textbox);
@@ -74,6 +74,6 @@ export class MagicWordsComponent extends Component {
             avatarSprite.texture = PIXI.Texture.from(`avatar-${avatarData.name}`);
             avatarSprite.visible = true;
         }
-        this._textboxComp.text.setText(line.text);
+        this._textboxComp.setText(line.text);
     }
 }

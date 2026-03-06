@@ -24,6 +24,10 @@
                 {
                     "alias": "ui",
                     "src": "images/ui/ui.json"
+                },
+                {
+                    "alias": "red_x",
+                    "src": "images/red_x.png"
                 }
             ]
         }
