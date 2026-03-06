@@ -23,7 +23,21 @@ export class MagicWordsScene extends Scene {
         const mw: GameObject = new GameObject({
             label: "Magic Words"
         });
-        mw.addComponent(new MagicWordsComponent(data));
+
+        const localAvatars: MagicWordsAvatarSpec[] = [
+            {
+                name: 'Neighbour',
+                url: 'avatar-Neighbour',
+                position: 'left'
+            }
+        ]
+        mw.addComponent(new MagicWordsComponent({
+            ...data, 
+            avatars: [
+                ...data.avatars,
+                ...localAvatars
+            ]
+        }));
         this._root.addChild(mw);
 
         this._root.addChild(UIUtils.createBackToMenuButton());

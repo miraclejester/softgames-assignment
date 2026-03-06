@@ -108,7 +108,7 @@ export class App {
             this.initializeScreen(),
             this._assets.initialize({
                 manifestPath: '/manifest.json',
-                initialBundles: ['cards', 'particles', 'ui']
+                initialBundles: ['cards', 'particles', 'ui', 'localMagicWords']
             })
         ]);
         this.initializePlugins();

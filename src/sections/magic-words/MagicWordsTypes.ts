@@ -14,10 +14,18 @@ export type MagicWordsAvatarSpec = {
     name: string;
     url: string;
     position: EMagicWordsAvatarPosition;
-}
+};
 
 export type MagicWordsConfigSchema = {
     dialogue: MagicWordsDialogueLine[];
     emojies: MagicWordsEmojiSpec[];
     avatars: MagicWordsAvatarSpec[];
-}
+    dialogueRate?: number;
+    avatarBobSpeed?: number;
+};
+
+export type MagicWordsParsedText = {
+    type: 'text' | 'emoji';
+    content: string;
+    alias?: string;
+};

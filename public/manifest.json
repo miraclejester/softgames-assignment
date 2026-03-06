@@ -34,6 +34,27 @@
                     "src": "images/red_x.png"
                 }
             ]
+        },
+        {
+            "name": "localMagicWords",
+            "assets": [
+                {
+                    "alias": "emoji-affirmative",
+                    "src": "images/localMagicWords/affirmative.png"
+                },
+                {
+                    "alias": "emoji-intrigued",
+                    "src": "images/localMagicWords/intrigued.png"
+                },
+                {
+                    "alias": "emoji-win",
+                    "src": "images/localMagicWords/win.png"
+                },
+                {
+                    "alias": "avatar-Neighbour",
+                    "src": "images/localMagicWords/neighbour.png"
+                }
+            ]
         }
     ]
 }

@@ -3,12 +3,13 @@ import { Component } from '../../core/Component';
 import type { EMagicWordsAvatarPosition, MagicWordsAvatarSpec, MagicWordsConfigSchema, MagicWordsDialogueLine } from './MagicWordsTypes';
 import { MagicWordsTextboxComponent } from './MagicWordsTextboxComponent';
 import { GameObject } from '../../core/GameObject';
+import { MagicWordsAvatarComponent } from './MagicWordsAvatarComponent';
 
 export class MagicWordsComponent extends Component {
-    private _avatarSpriteMap: Map<EMagicWordsAvatarPosition, PIXI.Sprite> = new Map<EMagicWordsAvatarPosition, PIXI.Sprite>();
+    private _avatarSpriteMap: Map<EMagicWordsAvatarPosition, MagicWordsAvatarComponent> = new Map<EMagicWordsAvatarPosition, MagicWordsAvatarComponent>();
     private _config: MagicWordsConfigSchema;
-    private _leftPortraitSprite: PIXI.Sprite;
-    private _rightPortraitSprite: PIXI.Sprite;
+    private _leftPortraitSprite: MagicWordsAvatarComponent;
+    private _rightPortraitSprite: MagicWordsAvatarComponent;
     private _textboxComp: MagicWordsTextboxComponent;
     private _avatarSpecMap: Map<string, MagicWordsAvatarSpec>;
     private _lineIndex: number = 0;
@@ -25,13 +26,8 @@ export class MagicWordsComponent extends Component {
         this._config.avatars.forEach((avatarSpec: MagicWordsAvatarSpec) => {
             this._avatarSpecMap.set(avatarSpec.name, avatarSpec);
         });
-        this._leftPortraitSprite = new PIXI.Sprite();
-        this._leftPortraitSprite.position.set(100, 600);
-        this._rightPortraitSprite = new PIXI.Sprite();
-        this._rightPortraitSprite.position.set(1200, 600);
-
-        this.gameObject.addChild(this._leftPortraitSprite);
-        this.gameObject.addChild(this._rightPortraitSprite);
+        this._leftPortraitSprite = this.createAvatarPortrait(100, 600);
+        this._rightPortraitSprite = this.createAvatarPortrait(1000, 600);
 
         this._avatarSpriteMap.set('left', this._leftPortraitSprite);
         this._avatarSpriteMap.set('right', this._rightPortraitSprite);
@@ -39,7 +35,7 @@ export class MagicWordsComponent extends Component {
         const textbox: GameObject = new GameObject({
             label: 'Textbox'
         });
-        textbox.position.set(300, 600);
+        textbox.position.set(250, 600);
         this._textboxComp = new MagicWordsTextboxComponent();
         textbox.addComponent(this._textboxComp);
         this.gameObject.addChild(textbox);
@@ -65,15 +61,27 @@ export class MagicWordsComponent extends Component {
     }
 
     public playLine(line: MagicWordsDialogueLine): void {
-        this._leftPortraitSprite.visible = false;
-        this._rightPortraitSprite.visible = false;
+        this._leftPortraitSprite.gameObject.visible = false;
+        this._rightPortraitSprite.gameObject.visible = false;
 
         const avatarData: MagicWordsAvatarSpec | undefined = this._avatarSpecMap.get(line.name);
-        const avatarSprite: PIXI.Sprite | undefined = avatarData ? this._avatarSpriteMap.get(avatarData.position) : undefined;
+        const avatarSprite: MagicWordsAvatarComponent | undefined = avatarData ? this._avatarSpriteMap.get(avatarData.position) : undefined;
         if (avatarData && avatarSprite) {
-            avatarSprite.texture = PIXI.Texture.from(`avatar-${avatarData.name}`);
-            avatarSprite.visible = true;
+            avatarSprite.setData(avatarData);
+            avatarSprite.gameObject.visible = true;
         }
         this._textboxComp.setText(line.text);
+    }
+
+    private createAvatarPortrait(x: number, y: number): MagicWordsAvatarComponent {
+        const obj: GameObject = new GameObject({
+            label: "AvatarPortrait"
+        });
+        const comp: MagicWordsAvatarComponent = new MagicWordsAvatarComponent();
+        obj.addComponent(comp);
+        this.gameObject.addChild(obj);
+        obj.x = x;
+        obj.y = y;
+        return comp;
     }
 }
