@@ -4,8 +4,12 @@
             "name": "cards",
             "assets": [
                 {
-                    "alias": "card_back",
-                    "src": "/images/card_back.png"
+                    "alias": "cards",
+                    "src": "/images/cards/cards.json"
+                },
+                {
+                    "alias": "poker_table",
+                    "src": "/images/cards/poker_table.png"
                 }
             ]
         },

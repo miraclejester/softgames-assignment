@@ -26,7 +26,7 @@ export class UIUtils {
     public static createBackToMenuButton(): GameObject {
         return this.createButtonObj({
             buttonText: "Back to Menu",
-            x: 1200,
+            x: 1150,
             y: 60,
             callback: () => App.instance.scenes.switchTo('main-menu')
         });

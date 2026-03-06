@@ -1,3 +1,5 @@
+import * as PIXI from 'pixi.js'
+import { App } from '../../core/App';
 import { UIUtils } from '../../core/components/ui/UIUtils';
 import { GameObject } from '../../core/GameObject';
 import { Scene } from '../../core/scenes/Scene';
@@ -11,7 +13,41 @@ export class AceOfShadowsScene extends Scene {
             label: "Ace of Shadows"
         });
 
-        aos.addComponent(new AceOfShadowsComponent())
+        aos.addChild(PIXI.Sprite.from('poker_table'));
+
+        const atlasKey: string = 'cards';
+        const backingFrame: string = 'card_backing'
+        const sheet: PIXI.Spritesheet = App.instance.assets.get<PIXI.Spritesheet>(atlasKey);
+        aos.addComponent(new AceOfShadowsComponent({
+            atlasKey,
+            backingFrame,
+            cardFrames: Object.keys(sheet.textures).filter((frame: string) => frame !== backingFrame),
+            startingStack: {
+                initialCards: 144,
+                atlasKey,
+                backingFrame,
+                x: 650,
+                y: 100
+            },
+            emptyStacks: [
+                {
+                    initialCards: 0,
+                    atlasKey, backingFrame, x: 300, y: 50
+                },
+                {
+                    initialCards: 0,
+                    atlasKey, backingFrame, x: 1000, y: 50
+                },
+                {
+                    initialCards: 0,
+                    atlasKey, backingFrame, x: 400, y: 150
+                },
+                {
+                    initialCards: 0,
+                    atlasKey, backingFrame, x: 900, y: 150
+                },
+            ]
+        }))
 
         this._root.addChild(aos);
 

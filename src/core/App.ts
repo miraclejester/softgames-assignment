@@ -38,6 +38,11 @@ export class App {
         return this._root;
     }
 
+    private _overlay: GameObject;
+    public get overlay(): GameObject {
+        return this._overlay;
+    }
+
     /**
      * Internal PIXI app managed by this object
      */
@@ -67,7 +72,11 @@ export class App {
         this._root = new GameObject({
             label: "root"
         });
+        this._overlay = new GameObject({
+            label: "overlay"
+        });
         this._innerApp.stage.addChild(this._root);
+        this._innerApp.stage.addChild(this._overlay);
         this._assets = new AssetLoader();
         this._sceneManager = new SceneManager({
             entries: [
@@ -112,7 +121,7 @@ export class App {
         fpsObj.x = 100;
         fpsObj.y = 60;
 
-        this._root.addChild(fpsObj);
+        this._overlay.addChild(fpsObj);
 
         this._innerApp.ticker.add((ticker: PIXI.Ticker) => {
             this._root.update(ticker.deltaMS);
@@ -130,7 +139,8 @@ export class App {
             width: 1280,
             height: 720,
             backgroundColor: 0x000000,
-            resizeTo: window
+            resolution: window.devicePixelRatio,
+            autoDensity: true
         });
         this._innerApp.canvas.style.display = 'block';
         this._innerApp.canvas.style.position = 'absolute';
@@ -156,9 +166,13 @@ export class App {
      * Resize the canvas and scale the root to fit the screen
      */
     private resize(): void {
-        this._innerApp.canvas.width = window.innerWidth;
-        this._innerApp.canvas.height = window.innerHeight;
-        const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
-        this._innerApp.stage.scale.set(scale);
+        const scale: number = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+        const width: number = 1280 * scale;
+        const height: number = 720 * scale;
+
+        this._innerApp.canvas.style.width = `${width}px`;
+        this._innerApp.canvas.style.height = `${height}px`;
+        this._innerApp.canvas.style.left = `${(window.innerWidth - width) / 2}px`;
+        this._innerApp.canvas.style.right = `${(window.innerHeight - height) / 2}px`;
     }
 }

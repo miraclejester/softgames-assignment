@@ -1,14 +1,14 @@
 import * as PIXI from 'pixi.js';
 import { Component } from '../../core/Component';
+import type { AceOfShadowsStackConfig } from './AceOfShadowsTypes';
+import { App } from '../../core/App';
 
 export class AceStackComponent extends Component {
     private _verticalOffset: number = 2;
     private _initialCards: number = 144;
-    public set initialCards(value: number) {
-        this._initialCards = value;
-    }
+    private _config: AceOfShadowsStackConfig;
     private _numCards: number = 0;
-    private _cardBackSpriteKey: string = 'card_back';
+    private _spritesheet: PIXI.Spritesheet;
     private _floorY: number = 300;
     public set floorY(value: number) {
         this._floorY = value;
@@ -19,20 +19,29 @@ export class AceStackComponent extends Component {
     }
 
     public get nextTopCardY(): number {
-        return this.topCardY - this._verticalOffset*2;
+        return this.topCardY - this._verticalOffset;
     }
 
     public get topCard(): PIXI.Sprite {
         return this.gameObject.children[this._numCards - 1] as PIXI.Sprite;
     }
 
+    public constructor(config: AceOfShadowsStackConfig) {
+        super();
+        this._config = config;
+    }
+
     public override ready(): void {
+        this._initialCards = this._config.initialCards;
+        this._spritesheet = App.instance.assets.get<PIXI.Spritesheet>(this._config.atlasKey);
         for (let i = 0; i < this._initialCards; ++i) {
-            const card: PIXI.Sprite = PIXI.Sprite.from(this._cardBackSpriteKey);
+            const card: PIXI.Sprite = PIXI.Sprite.from(this._spritesheet.textures[this._config.backingFrame]!);
             card.y = this._floorY - (i * this._verticalOffset);
             this.gameObject.addChild(card);
         }
         this._numCards = this._initialCards;
+        this.gameObject.x = this._config.x;
+        this.gameObject.y = this._config.y;
     }
 
     public removeTopCard(): PIXI.Sprite | null {
