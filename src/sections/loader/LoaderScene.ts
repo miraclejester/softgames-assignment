@@ -32,7 +32,7 @@ export class LoaderScene extends Scene {
 
         // Initialize the loader and only load the assets necessary to show loading information
         await App.instance.assets.initialize({
-            manifestPath: '/manifest.json',
+            manifestPath: 'manifest.json',
             initialBundles: ['ui']
         })
         
@@ -52,6 +52,8 @@ export class LoaderScene extends Scene {
         await App.instance.assets.loadInternal([
             'cards', 'particles', 'localMagicWords', 'hands', 'magicWords', 'audio'
         ], this.onProgress.bind(this));
+
+        App.instance.audio.warmUpSounds(['blip', 'deck-deal']);
 
         // Start loading external assets (Like the Magic Words avatars and emojies)
         this._loadingBar.progress = 0;

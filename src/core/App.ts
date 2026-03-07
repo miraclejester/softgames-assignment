@@ -165,8 +165,17 @@ export class App {
         document.body.style.margin = '0';
         document.body.style.padding = '0';
         document.body.appendChild(this._innerApp.canvas);
+
+        // Covering many cases of resizing
         this.resize();
-        window.addEventListener('resize', () => this.resize());
+        window.addEventListener('resize', this.resize.bind(this));
+        window.addEventListener('orientationchange', this.resize.bind(this));
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', this.resize.bind(this));
+        }
+        document.addEventListener("fullscreenchange", this.resize.bind(this));
+        setTimeout(this.resize.bind(this), 300);
+
         
         window.addEventListener('pointerdown', () => {
             if (!document.fullscreenElement) {
@@ -187,13 +196,24 @@ export class App {
      * Resize the canvas to fit the screen, keeping the initial ratio
      */
     private resize(): void {
-        const scale: number = Math.min(window.innerWidth / App.SCREEN_WIDTH, window.innerHeight / App.SCREEN_HEIGHT);
+        const size: PIXI.Point = this.getViewportSize();
+        const scale: number = Math.min(size.x / App.SCREEN_WIDTH, size.y / App.SCREEN_HEIGHT);
         const width: number = App.SCREEN_WIDTH * scale;
         const height: number = App.SCREEN_HEIGHT * scale;
 
         this._innerApp.canvas.style.width = `${width}px`;
         this._innerApp.canvas.style.height = `${height}px`;
-        this._innerApp.canvas.style.left = `${(window.innerWidth - width) / 2}px`;
-        this._innerApp.canvas.style.right = `${(window.innerHeight - height) / 2}px`;
+        this._innerApp.canvas.style.left = `${(size.x - width) / 2}px`;
+        this._innerApp.canvas.style.right = `${(size.y - height) / 2}px`;
+    }
+
+    private getViewportSize(): PIXI.Point {
+        if (window.visualViewport) {
+            return new PIXI.Point(
+                window.visualViewport.width,
+                window.visualViewport.height
+            )
+        }
+        return new PIXI.Point(window.innerWidth, window.innerHeight);
     }
 }
