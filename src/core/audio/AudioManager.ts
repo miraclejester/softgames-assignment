@@ -19,6 +19,24 @@ export class AudioManager {
      */
     public initialize(): void {
         sound.volumeAll = 0.5;
+
+        window.addEventListener('pointerdown', async () => {
+            const context: AudioContext = sound.context.audioContext;
+            if (context.state !== 'running') {
+                await context.resume();
+            }
+        }, { once: true });
+    }
+
+    /**
+     * Play sounds to warm up their contexts
+     * Mobile optimization
+     * @param aliases - Aliases to play
+     */
+    public warmUpSounds(aliases: string[]): void {
+        aliases.forEach((alias: string) => {
+            sound.play(alias, { volume: 0 });
+        });
     }
 
     /**
