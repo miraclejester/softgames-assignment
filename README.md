@@ -38,4 +38,4 @@ After the dialogue ends, a helpful hand guides you to the main menu
 
 ## Phoenix Flame
 
-This scene shows a pair of dignified hands holding the sacred phoenix flame. The fire effect is meant to evoke phoenix feathes burning into the sky as they are born from the hands
+This scene shows a pair of dignified hands holding the sacred phoenix flame. The fire effect is meant to evoke phoenix feathers burning into the sky as they are born from the hands
