@@ -32,8 +32,14 @@ export class AssetLoader {
      * @param progressCallback - Callback for showing loading progress
      */
     public async loadExternal(data: PIXI.UnresolvedAsset[], progressCallback: (progress: number) => void): Promise<void> {
-        await PIXI.Assets.load(data, progressCallback);
+        // Check if each url exists. Currently there is no fallback asset
+        const validationData: boolean[] = await Promise.all(
+            data.map((entry: PIXI.UnresolvedAsset) => this.srcExists(entry.src))
+        );
+        const validData: PIXI.UnresolvedAsset[] = data.filter((_entry: PIXI.UnresolvedAsset, index: number) => validationData[index]);
+        await PIXI.Assets.load(validData, progressCallback);
     }
+
 
     /**
      * Get an asset from the cache
@@ -50,5 +56,22 @@ export class AssetLoader {
      */
     private async loadBundle(bundleKey: string): Promise<void> {
         await PIXI.Assets.loadBundle(bundleKey);
+    }
+
+    /**
+     * Check if a source exists
+     * @param src - Asset source
+     * @returns True if the source exists
+     */
+    private async srcExists(src: PIXI.AssetSrc | undefined): Promise<boolean> {
+        if (!src) {
+            return false;
+        }
+        try {
+            const response: Response = await fetch(src.toString(), { method: 'HEAD', signal: AbortSignal.timeout(2000)});
+            return response.ok;
+        } catch (error) {
+            return false;
+        }
     }
 }
