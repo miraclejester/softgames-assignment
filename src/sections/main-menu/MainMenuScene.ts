@@ -20,7 +20,7 @@ export class MainMenuScene extends Scene {
      * Configure the title, the buttons that lead into sections, and the fun hands
      */
     public override async start(): Promise<void> {
-        const titleComp: TextComponent = new TextComponent("Jose Montenegro - Softgames Test!", {
+        const titleComp: TextComponent = new TextComponent("Jose Montenegro - PixiJS Demo", {
             fontSize: 40
         });
         const titleObj: GameObject = new GameObject({

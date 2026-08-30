@@ -1,6 +1,6 @@
-# Softgames Assignment - Jose Montenegro
+# PixiJS Demo - Jose Montenegro
 
-Hello Softgames! This is my entry for the technical assignment. I hope you like it! Below are descriptions for important parts of the application
+Below are descriptions for important parts of the application
 
 ## Entry Point and Application Class
 
